@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head th:fragment ="html-head">
+<meta charset="UTF-8">
+<title>Thymeleaf Fragments</title>
+<link rel ="stylesheet" href="/css/styles.css">
+</head>
+<body>
+	<header th:fragment="page-header">
+		<a href ="/" class="logo-container"><div class = "logo"></div><h2>Concierge Kart</h2></a>
+		
+		<div class = "top-right">
+			<div class="navbar">
+				<div class="dropdown">
+					<i class="fa fa-user"></i>
+			  		<button class="dropbtn" th:unless="${username}" onclick="dropdownToggle()">
+			  			Account
+			     		<i class="fa fa-caret-down"></i>
+			   		</button>
+			   		<button class="dropbtn" th:if="${username}" onclick="dropdownToggle()">
+			   			<i th:text="${username}"></i>
+			     		<i class="fa fa-caret-down"></i>
+			   		</button>
+					<div class="dropdown-content" th:unless="${username}">
+			      		<a class="link" href="#" th:href="@{/login}">Login</a>
+						<a class="link" href="#" th:href="@{/register}">Sign Up</a>
+			    	</div>
+			    	<div class="dropdown-content" th:if="${username}">
+			    		<a class="link" href="#" th:href="@{/user/account}">Account</a>
+			      		<a class="link" href="#" th:href="@{/logout}">Logout</a>
+			    	</div>
+			  	</div>
+			</div>
+		</div>
+	</header>
+</body>
+</html>

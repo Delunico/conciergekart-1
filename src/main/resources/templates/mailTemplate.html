@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" style="background-color: rgb(30,30,30);">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" shrink-to-fit="no">
+<meta name="x-apple-disable-message-reformating">
+</head>
+<body style="padding:0; background-color:rgb(30,30,30);" bgcolor="rgb(30,30,30)">
+	<section style="background-color: #343434;height: 100vh;display:block;text-align:center;padding-top:20px;">
+		<h1 style="color:white;text-align:center;">Concierge Kart</h1>
+		<h2 th:text="${subject}" style="color:white;text-align:center;"></h2>
+		<span style="color:rgb(220,220,220);display:block;padding:10px 20px;text-align:center;"th:text="${message}"></span>
+		<div th:if="${new_order}"style="display:block;text-align:center;padding-bottom:20px;">
+			<a href="https://www.concierge-kart.com/admin/myOrders"style="background-color:#3c6f57;text-align:center;color: white;padding:10px 20px;border-radius:10px;text-decoration: none;font-weight:600;font-size:larger;">Go to Orders</a>
+		</div>
+		<div th:if="${order}" style="padding-top:20px">
+			<p th:if="${new_order}" th:text="${order.streetAddress}" style="color:rgb(220,220,220);display:block;padding:10px 20px;text-align:center;"></p>
+			<table style="margin-right:auto; margin-left:auto; color:white;">
+			<tr th:each="product : ${cartItems}">
+				<td th:text="|${product.qty} x |"></td>
+				<td th:text="${product.title}"></td>
+				<td th:text="${product.weight}"></td>
+				<td th:text="|$${product.price}|"></td>
+			</tr></table>
+			<table style="margin-right:auto; margin-left:auto; color:white;">
+				<tr><td th:text="|Total: $${order.total}|"></td></tr>
+				<tr><td th:text="|Time Placed: ${order.timePlaced}|"></td></tr>
+			</table>
+			<p th:unless="${new_order}" style="color:rgb(220,220,220);display:block;padding:10px 20px;text-align:center;"><strong>CASH OR E-TRANSFER ONLY</strong></p>
+		</div>
+		<div style="display:block;text-align:center; border-bottom:2px solid rgb(220,220,220);padding-bottom:20px">
+			<a th:if="${recovery}" href="http://concierge-kart.com/login"style="background-color:#3c6f57;text-align:center;color: white;padding:10px 20px;border-radius:10px;text-decoration: none;font-weight:600;font-size:larger;">login</a>
+		</div>
+		<div th:unless="${contactus}" style="text-align:center;">
+			<a href="mailto:elixirhooch@gmail.com"style="color:rgb(220,220,220);display:block;padding:20px;padding-bottom:10px;text-decoration:none;">elixirhooch@gmail.com</a>
+			<p style="color:rgb(220,220,220);display:inline-block;">Text us 647-494-2192</p>
+			<a href="tel:647-494-2192"style="color:rgb(220,220,220);display:inline-block;padding:10px 20px;text-decoration:none;">Call Us</a>
+		</div>
+		<p th:text="${value}" style="color:rgb(30,30,30); height:40px; display:none;"></p>
+	</section>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+<meta property="og:title" content="Concierge Kart">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://concierge-kart.com">
+<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+<title>Add Product</title>
+<link rel="stylesheet" href="/css/main.css">
+<script src="../static/js/nav.js" th:src="@{/js/nav.js}"></script>
+</head>
+
+<body>
+	<div th:insert="fragments/header.html :: page-header"></div>
+	
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+	<section class ="flex-container">
+		<form name="form" action="#" th:action="@{/admin/addProduct}"
+		method="post" th:object ="${product}">
+		
+			<p><input type="number" th:field=*{id} placeholder="Enter Barcode" required></p>
+			
+			<p><input type="text" th:field=*{title} placeholder="Enter Title" required></p>
+	
+			<p><input type="text" th:field=*{brand} placeholder="Enter Brand" required></p>
+			
+			<p><input type="text" th:field=*{weight} placeholder="Enter Weight" required></p>
+			
+			<p><input type="number" th:field=*{price} placeholder="Enter Price" step=".01" required></p>
+			
+			<p>
+			<label for="categories">Choose a category</label>
+			<select name="categories" id="categories" th:field=*{catId} required>
+				<option 
+					th:each="category : ${categories}" 
+					th:field="*{catId}" 
+					th:value="${category.id}" 
+					th:text="${category.title}">
+				</option>
+			</select>
+			</p>
+			
+			<p><input type="text" th:field=*{description} placeholder="Enter description" required></p>
+			
+			<p><input type="text" th:field=*{img} placeholder="Enter Img URL"></p>
+	
+			<p><input type="submit" value="Add Product"></p>
+
+		</form>
+	</section>
+</body>
+<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>

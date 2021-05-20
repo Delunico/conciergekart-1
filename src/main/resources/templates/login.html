@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/main.css">
+<script src="../static/js/nav.js" th:src="@{/js/nav.js}"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+<meta property="og:title" content="Concierge Kart">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://concierge-kart.com">
+<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+<title>Log In</title>
+
+</head>
+<body>
+	<div th:insert="fragments/header.html :: page-header"></div>
+	
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+	
+	<section class ="flex-container">
+		
+		<form action="#" th:action="@{/login}" method="post" >
+			<div th:if="${param.logout}" class="error">
+				<h1>You are now logged out</h1>
+			</div>
+			<div th:if="${param.error}" class="error">
+				<h1>Invalid username or password</h1>
+			</div>
+			<div th:if="${message}" class="error">
+				<h1 th:text="${message}"></h1>
+			</div>
+			<p>
+				<input type="text" name="username" placeholder="Enter Email"required />
+			</p>
+			<p>
+				<input type="password" name="password" placeholder=" Enter Password"required />
+			</p>
+			<p class="remember-me-container">
+				<input type="checkbox" name="remember-me" id="remember-me" style="width:auto">
+				<label for="remember-me">Remember me</label>
+			</p>
+			
+			<input type="submit" value="login">
+			<h1>Not a member?</h1>
+			<h2><a href="/register">Register Here</a></h2>
+			<h1>forgot your password?</h1><h2><a href="/recover-account">Recover Now</a></h2>
+		</form>
+	</section>
+</body>
+<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+<meta property="og:title" content="Concierge Kart">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://concierge-kart.com">
+<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+<title>Permission Denied</title>
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+	<header th:insert="fragments/header.html :: page-header"></header>
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+	<section>
+		<h2>Permission denied</h2>
+		<p>Your do not have access to this area</p>
+		<h2>Authenticate <a href="#" th:href="@{/login}">here</a></h2>
+	</section>
+</body>
+<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/main.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+<meta property="og:title" content="Concierge Kart">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://concierge-kart.com">
+<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+<script src="../static/js/nav.js" th:src="@{/js/nav.js}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Orders</title>
+
+</head>
+<body>
+	<div th:insert="fragments/header.html :: page-header"></div>
+
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+
+	<section style="margin:10px 0px;">
+		<div class="back">
+			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a>Orders</a>
+		</div>
+		<div th:if="${message}" align="center" style="padding:0px 10px;">
+			<p th:text="${message}"></p>
+		</div>
+		
+		<div class="mycart" th:if="${orders}">
+			<div class="total-container" th:if="${orders}">
+				
+				<div th:unless="${active}">
+					<h2><a href="/admin/myActiveOrders">My Orders</a></h2>
+					<h1>AVAILABLE ORDERS</h1>
+				</div>
+				<div th:if="${active}">
+					<h2><a href="/admin/myOrders">Available Orders</a></h2>
+					<h1>MY ORDERS</h1>
+				</div>
+				
+				<div th:if="${orders.empty}">
+					<h1>There are no orders</h1>
+				</div>
+				
+				<table th:each="order : ${orders}" class="order-table">
+					<tr>
+						<td th:text="|$${order.total}|"></td>
+						<td th:text="|${order.timePlaced}|"></td>
+						<td th:if="${order.status == 0}" th:text="|Pending|" style="color:red"></td>
+						<td th:if="${order.status == 1}" th:text="|Completed|" style="color:#2bb673"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><a th:href="@{google.navigation:q=} + ${order.streetAddress}" th:target="_blank" style="
+						padding: 0;
+   					 	margin: 0;
+    					text-decoration: underline;
+    					color: white;
+    					text-shadow: 2px 2px #00000040;">
+						[[${order.streetAddress}]]</a></td>
+						<td 
+							th:each="customer : ${customers}" 
+							th:if="${order.userEmail == customer.email}" 
+							th:text="${customer.f_name}">	
+						</td>
+					</tr>
+					<tr th:each="item : ${orderItems}" th:if="${item.orderId}==${order.id}">
+						<td th:text="|${item.qty} x|"></td>
+						<td colspan="2" th:if="${item.winebox != ''}" th:text="|${item.title} - ${item.winebox}|"></td> <!-- winebox wine -->
+						<td th:unless="${item.winebox != ''}" th:text="${item.title}"></td> <!-- spirits -->
+						<td th:if="${item.catId == 21}"th:text="|${item.size}ml|"></td>
+					<tr>
+					<tr th:if="${order.driverId}==0">
+						<td colspan="3">
+							
+							<form action="/selectOrder" method="post" class="order-address">
+			    				<input type="submit" value="Select Order"></input>
+			    				<input type="hidden" name="id" th:value="${order.id}">
+							</form>
+							
+						</td>
+					</tr>
+					<tr th:if="${active}">
+						<td colspan="3" th:if="${order.status}==0">
+							
+							<form action="/completeOrder" method="post" class="order-address">
+			    				<input type="submit" value="Complete Order"></input>
+			    				<input type="hidden" name="id" th:value="${order.id}">
+							</form>
+							
+						</td>
+					</tr>
+					<tr th:each = "driver : ${drivers}" th:if="${order.driverId == driver.id}">
+						<td colspan="3">
+							<h2><a th:text="|${driver.f_name}'s Delivery|"></a></h2>
+						</td>
+					</tr>
+					
+				</table>
+				
+			</div>
+			
+		</div>
+		
+	</section>
+</body>
+<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>

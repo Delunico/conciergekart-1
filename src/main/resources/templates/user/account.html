@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/main.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+<meta property="og:title" content="Concierge Kart">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://concierge-kart.com">
+<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+<script src="../static/js/nav.js" th:src="@{/js/nav.js}"></script>
+<script src="../static/js/passwordCheck.js" th:src="@{/js/passwordCheck.js}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Account</title>
+
+</head>
+<body>
+	<header th:insert="fragments/header.html :: page-header"></header>
+	
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+
+	<section>
+		<div class="back">
+			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a>Account</a>
+		</div>
+		
+		<div class ="flex-container" th:if ="${user}">
+			
+			<form name="form" action="#" th:action="@{|/updateUser/${user.id}|}" method="post" onsubmit="return checkPasswords()" >
+				<div sec:authorize="hasRole('MANAGER')">
+					<h1 th:text="|Earnings: $${total}|"></h1>
+				</div>
+				<div id="error"></div>
+				<div th:if="${message}" align="center">
+					<h1 th:text="${message}"></h1>
+				</div>
+				<p>First Name:</p><input type ="text" name ="f_name" th:value="${user.f_name}"/>
+				<p>Last Name:</p><input type ="text" name ="l_name" th:value="${user.l_name}"/>
+				<p>Phone:</p><input type ="number" name ="phone" th:value="${user.phone}"/>
+				<p>Email:</p><input type ="email" name ="email" th:value="${user.email}"/>
+				
+				<h1>Change Password</h1><p><input type ="password" name ="password" placeholder="Enter New Password"/></p>
+				<input type ="password" name ="confirmPassword" placeholder="Confirm New Password"/>
+				
+				<p><input type="submit" value ="Update"></p>
+				
+			</form>
+		</div>
+	</section>
+</body>
+<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>

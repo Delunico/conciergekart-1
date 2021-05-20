@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/main.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+<meta property="og:title" content="Concierge Kart">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://concierge-kart.com">
+<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+<script src="../static/js/nav.js" th:src="@{/js/nav.js}"></script>
+<title>My Orders</title>
+
+</head>
+<body>
+	<div th:insert="fragments/header.html :: page-header"></div>
+
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+
+	<section style="margin:10px 0px;">
+		<div class="back">
+			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a>Orders</a>
+		</div>
+		<div th:if="${message}" align="center" style="padding:0px 10px;">
+			<p th:text="${message}"></p>
+		</div>
+		<div class ="flex-container">
+			<div th:if="${orders.empty}">
+				<h2>You have no orders!</h2>
+				<h2>Click Here to <a href="/">Browse</a></h2>
+			</div>
+		</div>
+		<div class="mycart" th:if="${orders}">
+		
+			<div class="total-container">
+				<a th:if="${driver_contact}" th:href="@{sms:} + ${driver_contact}" style="padding-bottom:none;">
+				Contact Driver: <div class="fa fa-commenting"></div> [[${driver_contact}]]</a>
+				<h1>ORDER HISTORY</h1>
+			
+				<table th:each="order : ${orders}" class="order-table">
+					<tr>
+						<td th:text="|$${order.total}|"></td>
+						<td th:text="|${order.timePlaced}|"></td>
+						<td th:if="${order.status == 0}" th:text="|Pending|" style="color:red"></td>
+						<td th:if="${order.status == 1}" th:text="|Completed|" style="color:#2bb673"></td>
+					</tr>
+					<tr>
+						<td th:text="|${order.streetAddress}|" colspan="3"></td>
+					</tr>
+				</table>
+				
+			</div>
+			
+		</div>
+	</section>
+</body>
+<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>

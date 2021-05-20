@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/main.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+<meta property="og:title" content="Concierge Kart">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://concierge-kart.com">
+<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+<script src="../static/js/nav.js" th:src="@{/js/nav.js}"></script>
+<title>MyCart</title>
+
+</head>
+<body>
+	<div th:insert="fragments/header.html :: page-header"></div>
+
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+
+	<section style="margin:10px 0px;">
+		<div class="back">
+			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a>MyCart</a>
+		</div>
+		<div th:if="${message}" class="error" align="center">
+			<h2 th:text="${message}"></h2>
+		</div>
+		<div class ="flex-container">
+			<div th:if="${products.empty}">
+				<h2>Your cart is empty!</h2>
+				
+				<h2>Click Here to <a href="/">Browse</a></h2>
+			</div>
+		</div>
+		<div class="mycart">
+			<div class="total-container" th:if="${total}">
+				<p th:text="|Total (${cart_qty} Items): $${total}|"></p>
+				<h2><a href="/user/checkout">Proceed to Checkout</a></h2>
+			
+			
+				<div class ="cart-item" th:each="product : ${products}">
+					<!-- title -->
+			
+					<a th:if="${product.winebox}" th:text="|${product.title} - ${product.winebox}|" href ="#" th:href="@{/viewProduct/} + ${product.id}" class="view-title"></a>
+					
+					<a th:unless="${product.winebox}" th:text="${product.title}" href ="#" th:href="@{/viewProduct/} + ${product.id}" class="view-title"></a>
+					<!-- image -->
+					<a href ="#" th:href="@{/viewProduct/} + ${product.id}">
+						<img th:src="@{${product.img}}" class ="product-cover">
+					</a>
+					<div class="flex-container">
+						<!-- price -->
+						<h2 th:text="|$${product.price}|"></h2>
+						<!-- weight -->
+						<p th:if="${product.catId == 21}" th:text="|${product.size}ml|" class="oneline"></p>
+						<p th:unless="${product.catId == 21}" th:text="|${product.weight}|" class="oneline"></p>
+						<!-- quantity -->
+						<p th:text="|Quantity: ${product.qty}|"></p>
+					</div>
+					
+					<div class="modify-cart">
+						<form action ="#" th:action="@{/removeCartItem/} +${product.id}" method="get">
+							<button type="submit" value="Submit" style="font-size:unset;">
+								<i class="fa fa-trash-o"></i>
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+		
+	</section>
+</body>
+<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>

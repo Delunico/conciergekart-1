@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="/css/main.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+	<meta property="og:title" content="Concierge Kart">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://concierge-kart.com">
+	<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+	<script src="../static/js/nav.js" th:src="@{/js/nav.js}"></script>
+	<title>Home</title>
+</head>
+<body>
+	<div th:insert="fragments/header.html :: page-header"></div>
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+		
+	<section th:class="${username} ? '' : hide-page " id="main-content">	
+		<div th:if="${message}" class="error" align="center">
+			<h2 th:text="${message}"></h2>
+		</div>
+			
+		<div class ="flex-container">
+				
+			<div th:if="${products}">
+				<h2 th:if="${products.empty}" th:text="|There are no Products available!|">The database is empty!</h2>
+			</div>
+				
+			<div class="category" th:each="category : ${categories}">
+				<div class="category-header">
+					<h2 th:text="${category.title}"></h2>
+				</div>
+				<div class="products-slider">
+					<div class="arrow-container-right"><i class="fa fa-chevron-right" id="slideRight"></i></div>
+					<div class="arrow-container-left"><i class="fa fa-chevron-left" id="slideLeft"></i></div>
+						
+						
+					<div class="slide" th:each="product : ${products}" th:if="${product.catId} == ${category.id}">
+						
+						<div class ="product-details">
+							<!-- title -->
+							<a th:text="${product.title}" href ="#" th:href="@{/viewProduct/} + ${product.id}" style="min-height:53px; padding-bottom:0;margin-bottom:0;"></a>
+							<!-- image -->
+							<a href ="#" th:href="@{/viewProduct/} + ${product.id}" style="padding-top:0;margin-top:0;">
+								<img th:src="@{${product.img}}" class ="product-cover">
+							</a>
+							<!-- rating -->
+							<div class ="starcontainer">
+								<img src ="/img/stars.png">
+								<div class ="starbar" th:style="|width: calc(20% * ${product.aveStars})|"></div>
+							</div>
+							<!-- weight -->
+							<p th:text="|${product.weight}|" class="oneline"></p>
+							<!-- price -->
+							<div th:unless="${#strings.length(product.weight) > 5}">
+								<h2 th:unless="${product.catId == 20 OR product.catId == 18}" th:text="|$${product.price}|"></h2>
+								<h2 th:if="${product.catId == 20 OR product.catId == 18}" th:text="|starting at $${product.price}|"></h2>
+							</div>
+							<div th:if="${product.weight == '375ml,750ml,1140ml'}" th:with="maxPrice=${product.price + 40}">
+								<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
+							</div>
+							<div th:if="${product.weight == '375ml,750ml'}" th:with="maxPrice=${product.price + 25}">
+								<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
+							</div>
+							<div th:if="${product.weight == '750ml,1140ml'}" th:with="maxPrice=${product.price + 15}">
+								<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
+							</div>
+							
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</section>
+		<div th:unless="${username}">
+			<section class="center-container background landing-page" id="age-verify">
+				<h2>Concierge Kart</h2>
+				<h1>Are you at least age 19 years old?</h1>
+				<a class="link" onclick="verifyAge()">YES, I'M OVER 19</a>
+				<a class="link" href="#" th:href="@{/no}">NO, I'M NOT 19</a>
+			</section>
+			<!-- <section th:if="${over19}==yes" class="center-container background landing-page">     force login to view products
+				<h2>Welcome to Concierge Kart</h2>
+				<h1>We deliver your after hours needs</h1>
+				<a class="link" href="#" th:href="@{/login}">Login</a>
+				<a class="link" href="#" th:href="@{/register}">Sign Up</a>
+				<h1 style = "text-decoration:underline;">We're open 24/7</h1>
+			</section> -->
+			<section th:if="${over19} == no" class="center-container background landing-page">
+				<h2>Concierge Kart</h2>
+				<h2>Sorry about that!</h2>
+				<h1>You must be 19 years of age or older to enter this site</h1>
+			</section>
+		</div>
+		
+	</body>
+	<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>

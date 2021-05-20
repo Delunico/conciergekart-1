@@ -1,0 +1,184 @@
+ <!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/viewBook.css">
+<title>View Product</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1Lbln3FzkHKtoIATFl2yD7H4kKq9alBjj">
+<meta property="og:title" content="Concierge Kart">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://concierge-kart.com">
+<link rel="icon" type="img/png" sizes="50x50" href="/img/favicon.png">
+<script src="../static/js/nav.js" th:src="@{/js/nav.js}"></script>
+<script src="../static/js/pricing.js" th:src="@{/js/pricing.js}"></script>
+</head>
+
+<script th:inline="javascript">
+
+    var product = [[${product}]];
+    var inCart = [[${favourited}]];
+    setProduct(product);
+    isInCart(inCart);
+   
+</script>
+
+<body>
+	<div th:insert="fragments/header.html :: page-header"></div>
+	
+	<div th:if="${message}" class="error">
+		<p th:text="${message}" />
+	</div>
+	
+	<div th:insert="fragments/nav.html :: page-nav"></div>
+	
+	<section>		
+		<div class="back">
+			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a href="/user/myCart">View Product</a>
+		</div>
+		<div class ="product-details view-product">
+			
+			<!-- title -->
+			<a th:text="${product.title}" href ="#" th:href="@{/viewProduct/} + ${product.id}" class="view-title"></a>
+			<div class="left-panel">
+				<!-- image -->
+				<a href ="#" th:href="@{/viewProduct/} + ${product.id}">
+					<img th:src="@{${product.img}}" class ="product-cover">
+				</a>
+				
+			</div>
+			
+			<div th:if="${favourited}" class="modify-cart">
+				<form action ="#" th:action="@{/removeCartItem/} +${product.id}" method="get">
+					<div class="flex-container">	
+						<!-- price -->
+						<h2 th:text="|$${product.price}|"></h2>
+						<!-- weight -->
+						<p th:text="|${product.weight}|"></p>
+						<!-- quantity -->
+						<p th:text="|Quantity: ${product.qty}|"></p>
+					</div>
+					<input type="submit" value="Remove Item" style="font-size:unset; background-color:darkred;">
+				</form>
+			</div>
+			
+			
+			<div th:unless="${favourited}" class="modify-cart">
+				<form action ="#" th:action="@{/addCartItem/} +${product.id}" method="post">
+					<div class="flex-container">	
+						<!-- price -->
+						<h2 id="price"></h2>
+						<!-- weight -->
+						<p th:text="|${product.weight}|"></p>
+					</div>
+					<div th:unless="${username}" class="flex-container center-container">
+						<h2><a href="/login">Login</a><br>To Purchase</h2>
+					</div>
+					<div th:if="${username}" class="flex-container center-container">
+						<p style="align-self: auto;">Quantity:
+						<!-- Quantity -->
+						<select name="qty" id="qtyBeer" required th:if="${product.catId == 20 OR product.catId == 18}">
+							<option
+								th:each="value : ${beerValues}" 
+								th:value="${value}" 
+								th:text="${value}">
+							</option>
+						</select>
+							
+						<select name="qty" id="qty" required th:if="${product.catId == 19 OR product.catId == 21}  ">
+							<option 
+								th:each="value : ${values}" 
+								th:value="${value}" 
+								th:text="${value}">
+								
+							</option>
+						</select>
+						</p>
+						<div th:if="${winebox}" style="color:#d2d2d2; text-align:left; padding-bottom:10px;"> Wine:
+							<select name="winebox" required th:if="${product.catId} == 19">
+								<option 
+									th:each="wine : ${winebox}" 
+									th:value="${wine}" 
+									th:text="${wine}">
+								</option>
+							</select>
+						</div>
+						<div th:if="${product.catId == 21}" style="color:#d2d2d2; text-align:left; padding-bottom:10px;"> Size:
+							<select name="size" id="size" required>
+								<option 
+									th:each="size : ${sizes}" 
+									th:value="${size}" 
+									th:text="|${size}ml|">
+								</option>
+							</select>
+						</div>
+						<div th:unless="${winebox}">
+							<input type="hidden" name="winebox">
+						</div>
+						<div th:unless="${product.catId == 21}">
+							<input type="hidden" name="size">
+						</div>
+						<h2><input type="submit" value="Add To Cart"></h2>
+						<p>stock is subject to availability</p>
+					</div>
+				</form>
+			</div>
+			
+		<div class ="description">
+			<div th:if="${winebox}">
+				<p><strong>Options: </strong> </p>
+				<ul>
+					<li style="color:#d2d2d2;" th:each="wine : ${winebox}"><span th:text="${wine}"></span></li>
+				</ul>
+				<p>
+				<strong>Alcohol/Vol: </strong> <span th:text="${product.alcohol_vol}"></span><br>
+				<strong>stock is subject to availability </strong><br>
+				</p>
+			</div>
+			<div th:unless="${winebox}">
+				<p><strong>Company: </strong> <span th:text="${product.brand}"></span><br>
+				<strong>Alcohol/Vol: </strong> <span th:text="${product.alcohol_vol}"></span><br>
+				<strong>Made In: </strong> <span th:text="${product.country}"></span><br>
+				</p>
+			</div>
+			
+			<p th:text ="${product.description}">follows the journey of Brian the snail, an adventure you'll never forget</p>
+		</div>
+		
+		
+		<div class="review-section">
+			<div style="margin-right:auto;">
+				<!-- review -->
+				<h2><a href="#" th:href="@{/user/addReview/} +${product.id}">Add Review</a></h2>
+				<!-- rating -->
+				<div class ="starcontainer">
+					<img src ="/img/stars.png">
+					<div class ="starbar" th:style="|width: calc(20% * ${product.aveStars})|"></div>
+					<p class="reviews_size" th:text="|(${reviews_size})|"></p>
+				</div>
+			</div>
+			<div th:if="${reviews.empty}" class ="flex-container">
+				<h2>There are no reviews!</h2>
+			</div>
+			<div th:unless="${reviews.empty}">
+				<section class ="flex-container">
+					<div th:each="review : ${reviews}" class="review-container">
+						<div class ="starcontainer">
+							<img src ="/img/stars.png">
+							<div class ="starbar" th:style="|width: calc(20% * ${review.stars})|"></div>
+						</div>
+						<br>
+						<br>
+						<p th:text="${review.text}">it was great</p>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>		
+</section>
+	
+</body>
+	<div th:insert="fragments/footer.html :: page-footer"></div>
+</html>
