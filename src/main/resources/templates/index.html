@@ -30,7 +30,7 @@
 				
 			<div class="category" th:each="category : ${categories}">
 				<div class="category-header">
-					<h2 th:text="${category.title}"></h2>
+					<h2 th:text="${category.title}" style="padding: 10px 0px 0px 10px;"></h2>
 				</div>
 				<div class="products-slider">
 					<div class="arrow-container-right"><i class="fa fa-chevron-right" id="slideRight"></i></div>
@@ -41,7 +41,8 @@
 						
 						<div class ="product-details">
 							<!-- title -->
-							<a th:text="${product.title}" href ="#" th:href="@{/viewProduct/} + ${product.id}" style="min-height:53px; padding-bottom:0;margin-bottom:0;"></a>
+							<a th:text="${product.title}" href ="#" th:href="@{/viewProduct/} + ${product.id}" 
+							style="min-height:53px; padding-bottom:0;margin-bottom:0;"></a>
 							<!-- image -->
 							<a href ="#" th:href="@{/viewProduct/} + ${product.id}" style="padding-top:0;margin-top:0;">
 								<img th:src="@{${product.img}}" class ="product-cover">
