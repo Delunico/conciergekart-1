@@ -46,16 +46,6 @@ public class HomeController {
 	@Lazy
 	private BCryptPasswordEncoder passwordEncoder;
 	
-	@PostMapping("contactus")
-	public String contactUs(Model model, @RequestParam String email, 
-			@RequestParam String message, @RequestParam String name) {
-		String subject = name +" sent you a message";
-		message += "\n"+"\n name: " + name +  "\n email: " + email;
-		sendEmail("elixirhooch@gmail.com","elixirhooch@gmail.com", subject, message);
-		model.addAttribute("message","An email has been sent and we'll reply shortly");
-		return "redirect:/contact-us";
-	}
-	
 	@PostMapping("recover")
 	public String recoverAccount(Model model,@RequestParam String email) {
 		String newPassword = generatePassword();
@@ -395,13 +385,7 @@ public class HomeController {
 		model.addAttribute("products", products);
 		return "login";
 	}
-	/**
-	 * This method adds a new book to the database and returns to home
-	 * @param title the title of the new book
-	 * @param author the author of the new book
-	 * @param model where to store our list of all books
-	 * @return a redirection to root "/" which then leads to home
-	 */
+
 	@PostMapping("admin/addProduct")
 	public String addProduct(@ModelAttribute Product product) {
 		da.addProduct(product);
@@ -438,7 +422,7 @@ public class HomeController {
 	/**
 	 * This method adds a review to the database and 
 	 * returns to the review page after
-	 * @param id the id of the book to add a review for
+	 * @param id the id of the product to add a review for
 	 * @param review the text of the review to add
 	 * @return a redirection to the previous review page
 	 */
@@ -464,13 +448,7 @@ public class HomeController {
 		model.addAttribute("allproducts",da.allProducts());
 		return "redirect:/viewProduct/" + products.get(0).getId();
 	}
-	/**
-	 * This method maps to the add-review template and
-	 * adds the book to add a review for to the model
-	 * @param bookID the id of the book to add a review for
-	 * @param model where to store the book
-	 * @return the path to access the add-review template
-	 */
+	
 	@GetMapping("user/addReview/{productId}")
 	public String AddReview(@PathVariable long productId, Model model, Authentication auth) {
 	
@@ -579,11 +557,7 @@ public class HomeController {
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 		return "user/account";
 	}
-	/**
-	 * This method maps the /addPage get request to the
-	 * add-book template 
-	 * @return the path to the add-book template
-	 */
+	
 	@GetMapping("admin/addPage")
 	public String managerIndex(Model model,Authentication auth) {
 
@@ -652,14 +626,26 @@ public class HomeController {
 		model.addAttribute("over19","no");
 		return "index";
 	}
-	@GetMapping("contact-us")
-	public String ContactUs(Model model, Authentication auth, HttpSession session) {
+	
+	@PostMapping("contactus")
+	public String contactUs(Model model, @RequestParam String email, 
+			@RequestParam String message, @RequestParam String name) {
+		String subject = name +" sent you a message";
+		message += "\n"+"\n name: " + name +  "\n email: " + email;
+		sendEmail("elixirhooch@gmail.com","elixirhooch@gmail.com", subject, message);
+		return "redirect:/contact-us/success";
+	}
+	@GetMapping({"contact-us","/contact-us/success"})
+	public String ContactUs(Model model, Authentication auth, HttpSession session, HttpServletRequest request) {
 		if(auth !=null) {
 			User user = da.getUser(auth.getName());
 			model.addAttribute("username",user.getF_name());
 			model.addAttribute("cart_qty",da.getMyCartItems(da.getCart(session, user.getId())).size());
 		}
 		model.addAttribute("allproducts",da.allProducts());
+		if(request.getRequestURL().toString().contains("success")) {
+			model.addAttribute("message","An email has been sent and we'll reply shortly");
+		}
 		return "contactus";
 	}
 }
