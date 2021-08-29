@@ -27,4 +27,5 @@ public class Product {
 	private long orderId;
 	private String winebox;
 	private String size;
+	private boolean enabled = true;
 }

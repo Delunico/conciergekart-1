@@ -32,6 +32,10 @@
 			
 			<p><input type="number" th:field=*{price} placeholder="Enter Price" step=".01" required></p>
 			
+			<p><input type="text" th:field=*{alcohol_vol} placeholder="Alcohol Percentage" required></p>
+			
+			<p><input type="text" th:field=*{country} placeholder="Enter Country" required></p>
+			
 			<p>
 			<label for="categories">Choose a category</label>
 			<select name="categories" id="categories" th:field=*{catId} required>

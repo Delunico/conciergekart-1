@@ -237,23 +237,20 @@ public class HomeController {
 	}
 	//SPIRITS
 	public double calcPrice(int quantity, int size,Product product){
-		double amount = product.getPrice();
+		double amount = 0;
 		switch (size) {
 			case(375):
-				amount = 40; 
+				amount = product.getPrice();; 
 			break;
 			case(750):
-				amount = 65; 
+				amount = product.getPrice() + 25; 
 			break;
 			case(1140):
-				amount = 80; 
+				amount = product.getPrice() + 40; 
 			break;
 		}
-		if(product.getId() == 80432500170l){ //jameson
-			amount = amount+5;
-		}
-		if(product.getId() == 891156001047l){ //hennesy
-			amount = 115;
+		if(product.getWeight().length() <= 6){
+			amount = product.getPrice();
 		}
 		return amount * quantity;
 	}
@@ -278,7 +275,7 @@ public class HomeController {
 		else if(quantity==72){
 			amount = 230;
 		}
-		if(product.getId() == 8594404110127l || product.getTitle().contains("White Claw")){//pilsner // white claw
+		if(product.getTitle().contains("Tall Boys") || product.getWeight().contains("473")){//pilsner // white claw //drop jaw
 			if(quantity >= 48 ) amount += 10;
 			if(quantity==72) return 245;
 		}
@@ -381,7 +378,7 @@ public class HomeController {
 			model.addAttribute("authorities", allAuthorities);
 			return "register";
 		}
-		List<Product> products = da.getProducts();
+		List<Product> products = da.getProducts(true);
 		model.addAttribute("products", products);
 		return "login";
 	}
@@ -401,8 +398,8 @@ public class HomeController {
 	@GetMapping("/")
 	public String goHome(Authentication auth,Model model,HttpSession session, HttpServletRequest request ) {
 		model.addAttribute("over19",false);
+		List<String> roles = new ArrayList<>();
 		if (auth != null) {
-			List<String> roles = new ArrayList<>();
 			for (GrantedAuthority authority : auth.getAuthorities()) {
 				roles.add(authority.getAuthority());
 			}
@@ -412,7 +409,7 @@ public class HomeController {
 			model.addAttribute("cart_qty",da.getMyCartItems(da.getCart(session, user.getId())).size());
 		}
 		
-		List<Product> products = da.getProducts();
+		List<Product> products = roles.contains("ROLE_MANAGER")? da.getProducts(false) : da.getProducts(true);
 		model.addAttribute("categories",da.getCategories());
 		model.addAttribute("products", products);
 		model.addAttribute("allproducts",da.allProducts());
@@ -508,6 +505,18 @@ public class HomeController {
 		model.addAttribute("quantity",0);
 		model.addAttribute("allproducts",da.allProducts());
 		return "view-product";
+	}
+	
+	@GetMapping("admin/disableProduct/{productId}")
+	public String disableProduct(Model model, @PathVariable long productId) {
+		da.updateItemStatus(productId,false);
+		return "redirect:/";
+	}
+	
+	@GetMapping("admin/enableProduct/{productId}")
+	public String enableProduct(Model model, @PathVariable long productId) {
+		da.updateItemStatus(productId,true);
+		return "redirect:/";
 	}
 	
 	@GetMapping("user/account")

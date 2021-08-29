@@ -46,22 +46,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		var amount;
 		switch (weight){
 			case 375:
-				amount = 40;
+				amount = product.price;
 			break;
 			
 			case 750:
-				amount = 65;
+				amount = product.price + 25;
 			break;
 			
 			case 1140:
-				amount = 80;
+				amount = product.price + 40;
 			break;
 		}
-		if(product.id == 80432500170){ //jameson
-			amount = amount+5;
-		}
-		if(product.id == 891156001047){ //hennesy
-			amount = 115;
+		if(product.weight.length <= 6){
+			amount = product.price;
 		}
 		amount = amount * qty ;
 		price.innerHTML= "$"+ amount +".00";
@@ -86,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	else if(quantity==72){
 		amount = 230;
 	}
-	if(product.id == 8594404110127 || product.title.includes("White Claw")){//pilsner // white claw
+	if(product.title.includes("Tall Boys") || product.weight.includes("473")){//pilsner // white claw //jaw drops
 		if(quantity >= 48) amount += 10;
 		if(quantity==72) amount = 245;
 	}

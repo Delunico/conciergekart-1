@@ -55,18 +55,23 @@
 							<!-- weight -->
 							<p th:text="|${product.weight}|" class="oneline"></p>
 							<!-- price -->
-							<div th:unless="${#strings.length(product.weight) > 5}">
-								<h2 th:unless="${product.catId == 20 OR product.catId == 18}" th:text="|$${product.price}|"></h2>
-								<h2 th:if="${product.catId == 20 OR product.catId == 18}" th:text="|starting at $${product.price}|"></h2>
+							<div th:if="${product.enabled}">
+								<div th:unless="${#strings.length(product.weight) > 6}">
+									<h2 th:unless="${product.catId == 20 OR product.catId == 18}" th:text="|$${product.price}|"></h2>
+									<h2 th:if="${product.catId == 20 OR product.catId == 18}" th:text="|starting at $${product.price}|"></h2>
+								</div>
+								<div th:if="${product.weight == '375ml,750ml,1140ml'}" th:with="maxPrice=${product.price + 40}">
+									<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
+								</div>
+								<div th:if="${product.weight == '375ml,750ml'}" th:with="maxPrice=${product.price + 25}">
+									<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
+								</div>
+								<div th:if="${product.weight == '750ml,1140ml'}" th:with="maxPrice=${product.price + 15}">
+									<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
+								</div>
 							</div>
-							<div th:if="${product.weight == '375ml,750ml,1140ml'}" th:with="maxPrice=${product.price + 40}">
-								<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
-							</div>
-							<div th:if="${product.weight == '375ml,750ml'}" th:with="maxPrice=${product.price + 25}">
-								<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
-							</div>
-							<div th:if="${product.weight == '750ml,1140ml'}" th:with="maxPrice=${product.price + 15}">
-								<h2 th:text="|$${product.price} - ${maxPrice}|"></h2>
+							<div th:unless="${product.enabled}">
+								<h2>DISABLED</h2>
 							</div>
 							
 						</div>

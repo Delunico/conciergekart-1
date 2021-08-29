@@ -97,9 +97,9 @@ public class DatabaseAccess {
 	 * in the h2 database
 	 * @return a list of all books 
 	 */
-	public List<Product> getProducts(){
+	public List<Product> getProducts(boolean filterEnabled){
 		
-		String query = "SELECT * FROM Product";
+		String query = filterEnabled? "SELECT * FROM Product where enabled = true" : "SELECT * FROM Product";
 		
 		BeanPropertyRowMapper<Product> mapper = 
 				new BeanPropertyRowMapper<Product>(Product.class);
@@ -290,6 +290,17 @@ public class DatabaseAccess {
 			return true;
 		}
 		
+	}
+	public void updateItemStatus(long productid,boolean status) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		String query = 
+				"UPDATE product SET enabled = :status WHERE id = :pid";
+		
+		params
+		.addValue("pid", productid)
+		.addValue("status", status);
+
+		jdbc.update(query, params);
 	}
 	
 	public MyCart getCart(HttpSession session, long userId) {
