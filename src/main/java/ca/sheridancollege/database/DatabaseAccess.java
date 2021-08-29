@@ -154,6 +154,31 @@ public class DatabaseAccess {
 		
 	}
 	
+	public void updateProduct(Product product) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		
+		String query = 
+				"UPDATE product SET title = :title, brand = :brand, img = :img, description = :description, weight = :weight, price = :price, catId = :catId,"
+				+ "country = :country, alcohol_vol = :alcohol_vol ";
+		String where ="WHERE id = :prodId";
+		params
+		.addValue("prodId", product.getId())
+		.addValue("title", product.getTitle())
+		.addValue("brand",  product.getBrand())
+		.addValue("description",  product.getDescription())
+		.addValue("weight", product.getWeight())
+		.addValue("price",  product.getPrice())
+		.addValue("catId",  product.getCatId())
+		.addValue("country",  product.getCountry())
+		.addValue("alcohol_vol",  product.getAlcohol_vol())
+		.addValue("img",  product.getImg());
+				
+		query += where;
+		
+		jdbc.update(query, params);
+		
+	}
+	
 	/**
 	 * This method get a specific book based on a given id
 	 * from the book table in the h2 database

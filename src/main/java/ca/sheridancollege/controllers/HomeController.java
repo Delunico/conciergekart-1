@@ -388,6 +388,13 @@ public class HomeController {
 		da.addProduct(product);
 		return "redirect:/";
 	}
+	
+	@PostMapping("admin/updateProduct")
+	public String updateProduct(@ModelAttribute Product product, Model model) {
+		da.updateProduct(product);
+		return "redirect:/admin/updatePage/"+product.getId();
+	}
+	
 	/**
 	 * This method maps to the home template page from the "/" root
 	 * @param auth the authorities of the current user
@@ -568,7 +575,7 @@ public class HomeController {
 	}
 	
 	@GetMapping("admin/addPage")
-	public String managerIndex(Model model,Authentication auth) {
+	public String addPage(Model model,Authentication auth) {
 
 		model.addAttribute("product", new Product());
 		User user = da.getUser(auth.getName());
@@ -576,6 +583,16 @@ public class HomeController {
 		model.addAttribute("allproducts",da.allProducts());
 		model.addAttribute("categories",da.getCategories());
 		return "admin/add-product";
+	}
+	@GetMapping("admin/updatePage/{productId}")
+	public String updatePage(Model model,Authentication auth, @PathVariable long productId) {
+
+		model.addAttribute("product", da.getProduct(productId));
+		User user = da.getUser(auth.getName());
+		model.addAttribute("username",user.getF_name());
+		model.addAttribute("allproducts",da.allProducts());
+		model.addAttribute("categories",da.getCategories());
+		return "admin/update-product";
 	}
 	/**
 	 * This method maps the /login get request to the

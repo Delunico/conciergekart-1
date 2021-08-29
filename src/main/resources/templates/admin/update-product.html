@@ -18,13 +18,13 @@
 	<div th:insert="fragments/header.html :: page-header"></div>
 	
 	<div th:insert="fragments/nav.html :: page-nav"></div>
-	
+		
 	<section>
 		<div class="back">
-			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a>Add Product</a>
+			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a th:href="@{/viewProduct/} + ${product.id}">View Product</a><div class="fa fa-chevron-right"></div><a>Update Product</a>
 		</div>
 		<div class ="flex-container">
-			<form name="form" action="#" th:action="@{/admin/addProduct}"
+			<form name="form" action="#" th:action="@{/admin/updateProduct}"
 			method="post" th:object ="${product}">
 			
 				<p><input type="number" th:field=*{id} placeholder="Enter Barcode" required></p>
@@ -57,7 +57,7 @@
 				
 				<p><input type="text" th:field=*{img} placeholder="Enter Img URL"></p>
 		
-				<p><input type="submit" value="Add Product"></p>
+				<p><input type="submit" value="Update Product"></p>
 	
 			</form>
 		</div>

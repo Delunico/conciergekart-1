@@ -36,7 +36,7 @@
 	
 	<section>		
 		<div class="back">
-			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a href="/user/myCart">View Product</a>
+			<a href="/" >Browse</a><div class="fa fa-chevron-right"></div><a th:href="@{/viewProduct/} + ${product.id}">View Product</a>
 		</div>
 		<div class ="product-details view-product">
 			
@@ -153,8 +153,13 @@
 				<!-- review -->
 				<h2 th:if="${product.enabled}"><a href="#" th:href="@{/admin/disableProduct/} +${product.id}" 
 				sec:authorize ="hasRole('ROLE_MANAGER')" style="background-color:darkred">DISABLE ITEM</a></h2>
+				
 				<h2 th:if="${!product.enabled}"><a href="#" th:href="@{/admin/enableProduct/} +${product.id}" 
 				sec:authorize ="hasRole('ROLE_MANAGER')">ENABLE ITEM</a></h2>
+				
+				<h2><a href="#" th:href="@{/admin/updatePage/} +${product.id}" 
+				sec:authorize ="hasRole('ROLE_MANAGER')">EDIT ITEM INFO</a></h2>
+				
 				<h2><a href="#" th:href="@{/user/addReview/} +${product.id}"
 				sec:authorize ="!hasRole('ROLE_MANAGER')">Add Review</a></h2>
 				<!-- rating -->
