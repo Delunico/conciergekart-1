@@ -284,7 +284,9 @@ h2{
 	font-weight:bold;
 	
 }
-h2 a, input[type="submit"]{
+h2 a, input[type="submit"], .btn{
+	outline:none;
+	border:none;
 	text-decoration:none;
 	color: #d2d2d2;
 	font-family:Arial;
@@ -294,6 +296,7 @@ h2 a, input[type="submit"]{
 	cursor:pointer;
 	font-weight: bold;
 	margin:0px 5px 0px 5px;
+	border-radius:8px;
 }
 .topnav input[type="text"]{
 	background-color: rgb(170,170,170);

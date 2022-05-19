@@ -13,6 +13,25 @@
 <title>Contact Us</title>
 
 </head>
+ <script src="https://www.google.com/recaptcha/api.js"></script>
+
+</script>
+  <script>
+  var canSubmit = false;
+  var verifyCallback = function(response) {
+	canSubmit = response ? true : false
+    };
+  var onloadCallback = function() {
+	    grecaptcha.render('captcha', {
+	          'sitekey' : '6LcAf_8fAAAAAHYblNhrcOzU-l7iBw6s9W3K4FMS',
+	          'callback' : verifyCallback,
+	          'theme' : 'dark'
+	        });
+	  };
+	function submitForm(){
+		return canSubmit;
+	}
+ </script>
 <body>
 	<div th:insert="fragments/header.html :: page-header"></div>
 	
@@ -26,13 +45,17 @@
 			<h2 th:text="${message}"></h2>
 		</div>
 		<div class ="contactus">
-			<form method ="post" action="contactus">
+			<form method ="post" action="contactus" onsubmit="return submitForm()" style="max-width:450px;">
 				<h2>Contact Us</h2>
-				<input type="text" name="name" placeholder="Enter Name">
-				<input type="text" name="email" placeholder="Enter Email">
-				<textarea name="message" placeholder="Enter Message"></textarea>
-				<input type="submit" value="send">
+				<input type="text" name="name" placeholder="Enter Name" required>
+				<input type="text" name="email" placeholder="Enter Email" required>
+				<textarea name="message" placeholder="Enter Message" required></textarea>
+				<div style="margin-left:auto; margin-right:auto; width:200px;" id="captcha"></div>
+				<input type="submit" value="Submit">
 			</form>
+			<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+		        async defer>
+		    </script>
 		</div>
 	</section>
 </body>

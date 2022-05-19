@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,7 @@ import ca.sheridancollege.beans.Review;
 import ca.sheridancollege.beans.User;
 import ca.sheridancollege.database.DatabaseAccess;
 import ca.sheridancollege.mail.MailClient;
+import org.springframework.core.env.Environment;
 
 @Controller
 public class HomeController {
@@ -661,14 +663,17 @@ public class HomeController {
 		sendEmail("elixirhooch@gmail.com","elixirhooch@gmail.com", subject, message);
 		return "redirect:/contact-us/success";
 	}
+	
 	@GetMapping({"contact-us","/contact-us/success"})
 	public String ContactUs(Model model, Authentication auth, HttpSession session, HttpServletRequest request) {
+		
 		if(auth !=null) {
 			User user = da.getUser(auth.getName());
 			model.addAttribute("username",user.getF_name());
 			model.addAttribute("cart_qty",da.getMyCartItems(da.getCart(session, user.getId())).size());
 		}
 		model.addAttribute("allproducts",da.allProducts());
+		model.addAttribute("site_key","6LcAf_8fAAAAAHYblNhrcOzU-l7iBw6s9W3K4FMS");
 		if(request.getRequestURL().toString().contains("success")) {
 			model.addAttribute("message","An email has been sent and we'll reply shortly");
 		}
