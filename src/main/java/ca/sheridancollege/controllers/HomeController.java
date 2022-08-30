@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
+
+import ca.sheridancollege.beans.GoogleResponse;
 import ca.sheridancollege.beans.MyCart;
 import ca.sheridancollege.beans.Orders;
 import ca.sheridancollege.beans.Product;
@@ -657,14 +660,32 @@ public class HomeController {
 	
 	@PostMapping("contactus")
 	public String contactUs(Model model, @RequestParam String email, 
-			@RequestParam String message, @RequestParam String name) {
-		String subject = name +" sent you a message";
-		message += "\n"+"\n name: " + name +  "\n email: " + email;
-		sendEmail("elixirhooch@gmail.com","elixirhooch@gmail.com", subject, message);
-		return "redirect:/contact-us/success";
+			@RequestParam String message, @RequestParam String name, 
+			@RequestParam(value="g-recaptcha-response") String gRecaptchaResponse,
+			HttpServletRequest request) {
+		System.out.println(gRecaptchaResponse);
+		System.out.println( request.getRequestURL().toString());
+		System.out.println(request.getRequestURL().toString().contains(".com"));
+		String uri = "https://www.google.com/recaptcha/api/siteverify?secret=";
+		uri += request.getRequestURL().toString().contains(".com") ? "6LcAf_8fAAAAAIKiWGhrqpysuwFh6-JBcdzvDnBm" : "6LdVfiQgAAAAANKvEnvX2iTmXKsC8HnAJifLMLeL";
+		uri += "&response=" + gRecaptchaResponse;
+		RestTemplate restTemplate = new RestTemplate();
+		GoogleResponse result = restTemplate.getForObject(uri, GoogleResponse.class);
+		System.out.println(uri);
+		if(result.isSuccess() & (!name.toLowerCase().contains("henry") & (!message.toLowerCase().contains("money") & !message.toLowerCase().contains("http")))) {
+			String subject = name +" sent you a message";
+			message += "\n"+"\n name: " + name +  "\n email: " + email;
+//			sendEmail("elixirhooch@gmail.com","elixirhooch@gmail.com", subject, message);
+			return "redirect:/contact-us/success";
+		}else {
+			return "redirect:/contact-us/failed";
+		}
+	
+		
+		
 	}
 	
-	@GetMapping({"contact-us","/contact-us/success"})
+	@GetMapping({"contact-us","/contact-us/success","/contact-us/failed"})
 	public String ContactUs(Model model, Authentication auth, HttpSession session, HttpServletRequest request) {
 		
 		if(auth !=null) {
@@ -676,6 +697,9 @@ public class HomeController {
 		model.addAttribute("site_key","6LcAf_8fAAAAAHYblNhrcOzU-l7iBw6s9W3K4FMS");
 		if(request.getRequestURL().toString().contains("success")) {
 			model.addAttribute("message","An email has been sent and we'll reply shortly");
+		}
+		if(request.getRequestURL().toString().contains("failed")) {
+			model.addAttribute("message","failed to send, please try again");
 		}
 		return "contactus";
 	}
